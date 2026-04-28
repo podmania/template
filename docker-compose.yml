@@ -1,10 +1,10 @@
 services:
   sonarr:
-    image: ghcr.io/podmania/{{ name }}:latest
+    image: ghcr.io/podmania/<% name %>:latest
     # set to host user id and gid
     # defaults to 1000:1000
     # user: 1001:1001
-    container_name: {{ name }}
+    container_name: <% name %>
     ports:
       - 1234:1234
     volumes:   

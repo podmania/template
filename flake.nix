@@ -1,5 +1,5 @@
 {
-  description = "{{ name.capitalize() }} distroless image";
+  description = "<% name.capitalize() %> distroless image";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -10,11 +10,11 @@
     pkgs = nixpkgs.legacyPackages.${system};
   in {
     packages.${system} = {
-      {{ name }}-image = pkgs.dockerTools.buildLayeredImage {
-        name = "{{ name }}";
+      <% name %>-image = pkgs.dockerTools.buildLayeredImage {
+        name = "<% name %>";
         tag = "latest";
         contents = [ 
-          pkgs.{{ name }}
+          pkgs.<% name %>
         ];
         config = {
           ExposedPorts = {
@@ -25,7 +25,7 @@
             "/data" = {};
           };
 
-          Cmd = [ "${pkgs.{{ name }}}/bin/{{ name }}" ];
+          Cmd = [ "${pkgs.<% name %>}/bin/<% name %>" ];
           # Distroless non‑root user
           User = "1000";
           WorkingDir = "/config";
@@ -33,9 +33,9 @@
       };
     };
 
-    # Expose the {{ name }} version for CI workflows
-    {{ name }}Version = pkgs.{{ name }}.version;
+    # Expose the <% name %> version for CI workflows
+    <% name %>Version = pkgs.<% name %>.version;
 
-    defaultPackage.${system} = self.packages.${system}.{{ name }}-image;
+    defaultPackage.${system} = self.packages.${system}.<% name %>-image;
   };
 }
