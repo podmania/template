@@ -1,5 +1,5 @@
 services:
-  sonarr:
+  <% name %>:
     image: ghcr.io/podmania/<% name %>:latest
     # set to host user id and gid
     # defaults to 1000:1000
