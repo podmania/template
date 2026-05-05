@@ -77,13 +77,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
       - name: Build OCI image
-        run: nix build .#{{ name }}-image --impure
+        run: nix build .#<% name %>-image --impure
       - name: Load and tag
         run: |
           docker load < result
           VERSION="${{ needs.check-version.outputs.new_version }}"
-          docker tag {{ name }}:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}-${{ matrix.arch }}
-          docker tag {{ name }}:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-${{ matrix.arch }}
+          docker tag <% name %>:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}-${{ matrix.arch }}
+          docker tag <% name %>:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-${{ matrix.arch }}
       - name: Push
         run: |
           VERSION="${{ needs.check-version.outputs.new_version }}"
