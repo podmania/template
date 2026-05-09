@@ -15,7 +15,7 @@ Go to **Actions → Create image from template** and fill in the inputs:
 | `env` | No | Comma-separated env vars (e.g. `KEY=value,KEY2=value2`) |
 | `cmd_args` | No | Comma-separated extra args (e.g. `-data=/config,-nobrowser`) |
 
-The workflow validates the package exists in nixpkgs, creates a new private repo under `podmania/`, renders the templates, and pushes an initial commit.
+The workflow validates the package exists in nixpkgs, renders the templates, and pushes a commit.
 
 ## What gets generated
 
