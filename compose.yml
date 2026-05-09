@@ -4,9 +4,12 @@ services:
     userns_mode: "keep-id"
     container_name: <% name %>
     ports:
-      - 1234:1234
+      <% for port in ports %>
+      - <% port %>:<% port %>
+      <% endfor %>
     volumes:
-      - ./config:/config
-      - ./data:/data
+      <% for volume in volumes %>
+      - ./<% volume | replace('/', '') %>:<% volume %>
+      <% endfor %>
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped

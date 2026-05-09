@@ -20,13 +20,23 @@
         copyToRoot = [ pkgs.<% name %> ];
         config = {
           ExposedPorts = {
-            "1234/tcp" = {};
+            <% for port in ports %>
+            "<% port %>/tcp" = {};
+            <% endfor %>
           };
           Volumes = {
-            "/config" = {};
-            "/data" = {};
+            <% for volume in volumes %>
+            "<% volume %>" = {};
+            <% endfor %>
           };
-          Cmd = [ "${pkgs.<% name %>}/bin/<% name %>" ];
+          <% if env %>
+          Env = [
+            <% for e in env %>
+            "<% e %>"
+            <% endfor %>
+          ];
+          <% endif %>
+          Cmd = [ "${pkgs.<% name %>}/bin/<% name %>" <% for arg in cmd_args %>"<% arg %>" <% endfor %>];
         };
       };
 
