@@ -1,21 +1,23 @@
 {
-  description = "<% name.capitalize() %> distroless image";
+  description = "<% name.capitalize() %> distroless image using nix2container";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nix2container.url = "github:nlewo/nix2container";
+    base.url = "github:podmania/base";
   };
 
-  outputs = { self, nixpkgs }: let
+  outputs = { self, nixpkgs, nix2container, base }: let
     system = builtins.currentSystem;
     pkgs = nixpkgs.legacyPackages.${system};
+    n2c = nix2container.outputs.packages.${system}.nix2container;
   in {
     packages.${system} = {
-      <% name %>-image = pkgs.dockerTools.buildLayeredImage {
+      <% name %>-image = n2c.buildImage {
         name = "<% name %>";
         tag = "latest";
-        contents = [ 
-          pkgs.<% name %>
-        ];
+        fromImage = base.packages.${system}.base-image;
+        copyToRoot = [ pkgs.<% name %> ];
         config = {
           ExposedPorts = {
             "1234/tcp" = {};
@@ -24,18 +26,13 @@
             "/config" = {};
             "/data" = {};
           };
-
           Cmd = [ "${pkgs.<% name %>}/bin/<% name %>" ];
-          # Distroless non‑root user
-          User = "1000";
-          WorkingDir = "/config";
         };
       };
+
+      default = self.packages.${system}.<% name %>-image;
     };
 
-    # Expose the <% name %> version for CI workflows
     <% name %>Version = pkgs.<% name %>.version;
-
-    defaultPackage.${system} = self.packages.${system}.<% name %>-image;
   };
 }
