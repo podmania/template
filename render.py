@@ -9,7 +9,6 @@ from jinja2 import Environment, FileSystemLoader
 TEMPLATES = [
     "flake.nix",
     "compose.yml",
-    "README.md",
     ".github/workflows/build-publish.yml",
 ]
 
@@ -110,6 +109,26 @@ def main():
             os.makedirs(os.path.dirname(dst), exist_ok=True)
             shutil.copy2(src, dst)
             print(f"Copied {static_file}")
+
+    readme_path = os.path.join(output_dir, "README.md")
+    with open(readme_path, "w") as f:
+        f.write(f"# {name}\n\n{description}\n")
+        if ports:
+            f.write("\n## Ports\n\n")
+            for port in ports:
+                f.write(f"- `{port}`\n")
+        if volumes:
+            f.write("\n## Volumes\n\n")
+            for volume in volumes:
+                f.write(f"- `{volume}`\n")
+        f.write(
+            '\n<a href="https://www.buymeacoffee.com/bhoehn"'
+            ' target="_blank">'
+            '<img src="https://cdn.buymeacoffee.com/buttons/'
+            'default-orange.png" alt="Buy Me A Coffee"'
+            ' height="41" width="174"></a>\n'
+        )
+    print("Generated README.md")
 
 
 if __name__ == "__main__":
