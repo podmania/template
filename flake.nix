@@ -17,7 +17,6 @@
         name = "<%= name %>";
         tag = "latest";
         fromImage = base.packages.${system}.base-image;
-        copyToRoot = [ pkgs.<%= name %> ];
         config = {
           ExposedPorts = {
             <% for port in ports %>
@@ -39,6 +38,8 @@
           Cmd = [ "${pkgs.<%= name %>}/bin/<%= main_program or name %>"<% for arg in cmd_args %> "<%= arg %>"<% endfor %> ];
         };
       };
+
+      <%= name %> = pkgs.<%= name %>;
 
       default = self.packages.${system}.<%= name %>-image;
     };
