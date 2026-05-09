@@ -44,15 +44,6 @@ jobs:
       - name: Install jinja2
         run: pip install jinja2
 
-      - name: Check repo does not already exist
-        run: |
-          if gh repo view ${{ github.repository_owner }}/${{ inputs.name }} &>/dev/null; then
-            echo "::error::Repository ${{ github.repository_owner }}/${{ inputs.name }} already exists"
-            exit 1
-          fi
-        env:
-          GH_TOKEN: ${{ github.token }}
-
       - name: Create new repository
         id: repo
         run: |
