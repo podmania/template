@@ -30,10 +30,10 @@ jobs:
         with:
           use-flakehub: false
 
-      - name: Get current <% name %> version from nixpkgs
+      - name: Get current <%= name %> version from nixpkgs
         id: version
         run: |
-          VERSION=$(nix eval .#<% name %>Version --raw --impure)
+          VERSION=$(nix eval .#<%= name %>Version --raw --impure)
           echo "new_version=$VERSION" >> $GITHUB_OUTPUT
       - name: Check if version already exists or force rebuild requested
         id: check
@@ -75,12 +75,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
       - name: Build and load image
-        run: nix run .#<% name %>-image.copyToDockerDaemon --impure
+        run: nix run .#<%= name %>-image.copyToDockerDaemon --impure
       - name: Tag and push
         run: |
           VERSION="${{ needs.check-version.outputs.new_version }}"
-          docker tag <% name %>:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}-${{ matrix.arch }}
-          docker tag <% name %>:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-${{ matrix.arch }}
+          docker tag <%= name %>:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}-${{ matrix.arch }}
+          docker tag <%= name %>:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-${{ matrix.arch }}
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}-${{ matrix.arch }}
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest-${{ matrix.arch }}
 
@@ -120,4 +120,4 @@ jobs:
           gh release create "${VERSION}" \
             --repo ${{ github.repository }} \
             --title "${VERSION}" \
-            --notes "<% name %> ${VERSION}"
+            --notes "<%= name %> ${VERSION}"

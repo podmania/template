@@ -1,5 +1,5 @@
 {
-  description = "<% name.capitalize() %> distroless image using nix2container";
+  description = "<%= name.capitalize() %> distroless image using nix2container";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -13,36 +13,36 @@
     n2c = nix2container.outputs.packages.${system}.nix2container;
   in {
     packages.${system} = {
-      <% name %>-image = n2c.buildImage {
-        name = "<% name %>";
+      <%= name %>-image = n2c.buildImage {
+        name = "<%= name %>";
         tag = "latest";
         fromImage = base.packages.${system}.base-image;
-        copyToRoot = [ pkgs.<% name %> ];
+        copyToRoot = [ pkgs.<%= name %> ];
         config = {
           ExposedPorts = {
             <% for port in ports %>
-            "<% port %>/tcp" = {};
+            "<%= port %>/tcp" = {};
             <% endfor %>
           };
           Volumes = {
             <% for volume in volumes %>
-            "<% volume %>" = {};
+            "<%= volume %>" = {};
             <% endfor %>
           };
           <% if env %>
           Env = [
             <% for e in env %>
-            "<% e %>"
+            "<%= e %>"
             <% endfor %>
           ];
           <% endif %>
-          Cmd = [ "${pkgs.<% name %>}/bin/<% name %>" <% for arg in cmd_args %>"<% arg %>" <% endfor %>];
+          Cmd = [ "${pkgs.<%= name %>}/bin/<%= main_program or name %>"<% for arg in cmd_args %> "<%= arg %>"<% endfor %> ];
         };
       };
 
-      default = self.packages.${system}.<% name %>-image;
+      default = self.packages.${system}.<%= name %>-image;
     };
 
-    <% name %>Version = pkgs.<% name %>.version;
+    <%= name %>Version = pkgs.<%= name %>.version;
   };
 }
